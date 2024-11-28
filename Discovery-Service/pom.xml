@@ -26,12 +26,7 @@
         <tag/>
         <url/>
     </scm>
-    <properties>
-        <java.version>17</java.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
-        <sonar.host.url>http://sonarqube:9000</sonar.host.url>
-        <sonar.login>squ_68931a9b54e40a76ea8bc4a1462bffdd45438466</sonar.login>
-    </properties>
+
 
     <dependencies>
         <dependency>

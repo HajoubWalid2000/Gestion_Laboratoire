@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarqube-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarqube-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonarqube-service
+  template:
+    metadata:
+      labels:
+        app: sonarqube-service
+    spec:
+      containers:
+        - name: sonarqube-service
+          image: sonarqube:latest
+          ports:
+            - name: http-port
+              containerPort: 9000
+          volumeMounts:
+            - name: sonarqube-data
+              mountPath: /opt/sonarqube/data
+          securityContext:
+            runAsUser: 0
+      volumes:
+        - name: sonarqube-data
+          persistentVolumeClaim:
+            claimName: sonarqube-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarqube-service
+spec:
+  type: LoadBalancer
+  ports:
+    - name: http
+      port: 9000
+      targetPort: 9000
+  selector:
+    app: sonarqube-service
