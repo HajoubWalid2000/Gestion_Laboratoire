@@ -13,16 +13,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class EnseignantServiceTest {
-
 
     @Mock
     private EnseignantRepository enseignantRepository;
@@ -127,14 +129,36 @@ class EnseignantServiceTest {
     @Test
     void delete_Enseignant() {
         Long id = 1L;
-        Enseignant enseignant = new Enseignant(1L,"driss","mrabet","la1223","driss@mail.com","driss123","informatique","Enseignant");
-
-
+        service_test.Delete_Enseignant(id);
     }
 
     @Test
     void statistique() {
         Long id = 1L;
-        Enseignant enseignant = new Enseignant(1L,"driss","mrabet","la1223","driss@mail.com","driss123","informatique","Enseignant");
+        Map<String, Long> Statistiques = new HashMap<>();
+        Statistiques.put("nombre de chercheur",2L);
+        Statistiques.put("nombre de projet",4L);
+
+        Mockito.when(chercheurRestFeign.nb_chercheur_Enseignant(id)).thenReturn(Long.valueOf(2));
+        Mockito.when(projetRestFeign.nb_Projet_Enseignant(id)).thenReturn(Long.valueOf(4));
+
+        Map<String, Long> result = service_test.statistique(id);
+        AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isEqualTo(Statistiques);
+
     }
+    @Test
+    void Notstatistique() {
+        Long id = 1L;
+        Map<String, Long> Statistiques = new HashMap<>();
+        Statistiques.put("nombre de chercheur",2L);
+        Statistiques.put("nombre de projet",4L);
+
+        Mockito.when(chercheurRestFeign.nb_chercheur_Enseignant(id)).thenReturn(null);
+        Mockito.when(projetRestFeign.nb_Projet_Enseignant(id)).thenReturn(null);
+
+        Map<String, Long> result = service_test.statistique(id);
+        AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().isNotEqualTo(Statistiques);
+
+    }
+
 }
