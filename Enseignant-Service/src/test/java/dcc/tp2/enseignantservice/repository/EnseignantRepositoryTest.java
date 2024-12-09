@@ -16,19 +16,21 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class EnseignantRepositoryTest {
 
+
     @Autowired
     private EnseignantRepository enseignantRepository;
 
     @BeforeEach
-    void setUp() {
-        enseignantRepository.save(new Enseignant(null,"Ali","Ahmadi","LA11111","ali@mail.com","123","infor","Enseignant"));
-        enseignantRepository.save(new Enseignant(null,"mohamed","mrini","KB1234","mrini@mail.com","123","infor","Enseignant"));
+    void setUp(){
+        enseignantRepository.save(new Enseignant(null,"ali","ahmadi","LA11233","ali@mail.com","123","info","Enseignant"));
+        enseignantRepository.save(new Enseignant(null,"mohamed","mrini","KB11233","mohamed@mail.com","123","info","Enseignant"));
+
     }
 
     @Test
     void findEnseignantByEmail() {
-        String email="ali@mail.com";
-        Enseignant enseignant = new Enseignant(null,"Ali","Ahmadi","LA11111","ali@mail.com","123","infor","Enseignant");
+       String email = "ali@mail.com";
+       Enseignant enseignant =  new Enseignant(null,"ali","ahmadi","LA11233","ali@mail.com","123","info","Enseignant");
 
         Enseignant result = enseignantRepository.findEnseignantByEmail(email);
 
@@ -37,14 +39,13 @@ class EnseignantRepositoryTest {
 
     }
 
+
     @Test
     void Not_findEnseignantByEmail() {
-        String email="abc@mail.com";
+        String email = "abc@mail.com";
         Enseignant result = enseignantRepository.findEnseignantByEmail(email);
         AssertionsForClassTypes.assertThat(result).isNull();
-
     }
-
 
 
 }
