@@ -9,12 +9,11 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class EnseignantRepositoryTest {
 
     @Autowired
@@ -22,24 +21,30 @@ class EnseignantRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        enseignantRepository.save(new Enseignant(null,"oussama","alaoui","la1223","oussama@mail.com","oussama123","informatique","Enseignant"));
-        enseignantRepository.save(new Enseignant(null,"nadir","hmimed","KB2244","nadir@mail.com","nadir123","informatique","Enseignant"));
+        enseignantRepository.save(new Enseignant(null,"Ali","Ahmadi","LA11111","ali@mail.com","123","infor","Enseignant"));
+        enseignantRepository.save(new Enseignant(null,"mohamed","mrini","KB1234","mrini@mail.com","123","infor","Enseignant"));
     }
 
-
     @Test
-    public void souldfindEnseignantByEmail(){
-        String email = "oussama@mail.com";
-        Enseignant enseignant = new Enseignant(null,"oussama","alaoui","la1223","oussama@mail.com","oussama123","informatique","Enseignant");
+    void findEnseignantByEmail() {
+        String email="ali@mail.com";
+        Enseignant enseignant = new Enseignant(null,"Ali","Ahmadi","LA11111","ali@mail.com","123","infor","Enseignant");
+
         Enseignant result = enseignantRepository.findEnseignantByEmail(email);
+
         AssertionsForClassTypes.assertThat(result).isNotNull();
+        AssertionsForClassTypes.assertThat(result).usingRecursiveComparison().ignoringFields("id").isEqualTo(enseignant);
+
     }
 
     @Test
-    public void souldNotfindEnseignantByEmail(){
-        String email = "xy@z.com";
+    void Not_findEnseignantByEmail() {
+        String email="abc@mail.com";
         Enseignant result = enseignantRepository.findEnseignantByEmail(email);
         AssertionsForClassTypes.assertThat(result).isNull();
+
     }
+
+
 
 }
