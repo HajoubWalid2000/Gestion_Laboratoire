@@ -1,6 +1,5 @@
 - name: installer Git et copy un fichier
   hosts: linux_serveur
-  become: yes
   tasks:
     - name: installer Git
       yum:
