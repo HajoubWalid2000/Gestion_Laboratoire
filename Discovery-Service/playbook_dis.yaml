@@ -3,15 +3,18 @@
   gather_facts: no
 
   tasks:
-    - name: Deploy the Application using Deployment manifest
-      win_command:
-        cmd: "kubectl apply -f discovery-deploy.yaml"
+    - name: Copy Kubernetes manifest to remote server
+      copy:
+        src: ./discovery-deploy.yaml
+        dest: /tmp/discovery-deploy.yaml
 
-    - name: Confirm Application Running
-      win_command:
-        cmd: "kubectl get pods"
+    - name: Deploy Kubernetes manifest on remote cluster
+      command: "kubectl apply -f /tmp/discovery-deploy.yaml"
+
+    - name: Get status of running pods
+      command: "kubectl get pods "
       register: pod_status
 
-    - name: Print Pod Status
+    - name: Display pod status
       debug:
-        msg: "Pod Status: {{ pod_status.stdout }}"
+        msg: "Pods Status: {{ pod_status.stdout }}"
