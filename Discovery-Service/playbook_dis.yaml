@@ -1,15 +1,16 @@
-
+---
 - name: Deploy an Application to Kubernetes
   hosts: windows_serveur
   gather_facts: no
 
   vars:
-    app_name: discovery-app
     manifest_path: "{{ playbook_dir }}/discovery-deploy.yaml"
 
   tasks:
-    - name: Deploy Kubernetes manifest on remote cluster
-      win_command: "kubectl apply -f {{ manifest_path }}"
+    - name: Deploy Kubernetes manifest using Ansible Kubernetes module
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('file', manifest_path) }}"
 
     - name: Get status of running pods
       win_command: "kubectl get pods "
