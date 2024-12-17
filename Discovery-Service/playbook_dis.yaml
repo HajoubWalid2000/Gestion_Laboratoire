@@ -1,15 +1,13 @@
-- name: Deploy Kubernetes Deployment without kubeconfig
+- name: Deploy Kubernetes manifest using kubectl on Windows
   hosts: windows_serveur
   gather_facts: no
 
   tasks:
+    - name: Ensure kubectl is installed
+      win_command: kubectl version --client
+      register: kubectl_installed
+      ignore_errors: yes
 
     - name: Deploy Kubernetes manifest
-      kubernetes.core.k8s:
-        state: present
-        definition: "discovery-deploy.yaml"
-      register: deployment_result
+      win_command: "kubectl apply -f discovery-deploy.yaml"
 
-    - name: Display deployment result
-      debug:
-        msg: "Deployment result: {{ deployment_result }}"
