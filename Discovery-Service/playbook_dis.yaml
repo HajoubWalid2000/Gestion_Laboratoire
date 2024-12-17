@@ -1,16 +1,17 @@
-
 - name: Deploy an Application to Kubernetes
   hosts: windows_serveur
   gather_facts: no
 
   tasks:
     - name: Deploy the Application using Deployment manifest
-      command: "kubectl apply -f discovery-deploy.yaml"
+      win_command:
+        cmd: "kubectl apply -f discovery-deploy.yaml"
 
     - name: Confirm Application Running
-      command: "kubectl get pods "
+      win_command:
+        cmd: "kubectl get pods"
       register: pod_status
 
     - name: Print Pod Status
       debug:
-        msg: "{{ pod_status.stdout }}"
+        msg: "Pod Status: {{ pod_status.stdout }}"
