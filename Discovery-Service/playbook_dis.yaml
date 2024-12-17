@@ -1,18 +1,34 @@
-- name: Deploy an Application to Kubernetes
+
+- name: Deploy microservice to Kubernetes
   hosts: windows_serveur
   gather_facts: no
 
+  vars:
+    app_name: discovery-app
+    manifest_path: "{{ playbook_dir }}/discovery-deploy.yaml"
+    remote_manifest_path: "/tmp/discovery-deploy.yaml"
+
   tasks:
+
+    # ============================================================
+    # 1. Copier le fichier discovery-deploy.yaml sur le serveur distant
+    # ============================================================
     - name: Copy Kubernetes manifest to remote server
       copy:
-        src: ./discovery-deploy.yaml
-        dest: /tmp/discovery-deploy.yaml
+        src: "{{ manifest_path }}"
+        dest: "{{ remote_manifest_path }}"
 
+    # ============================================================
+    # 2. Appliquer le manifest Kubernetes sur le cluster
+    # ============================================================
     - name: Deploy Kubernetes manifest on remote cluster
-      command: "kubectl apply -f /tmp/discovery-deploy.yaml"
+      command: "kubectl apply -f {{ remote_manifest_path }}"
 
+    # ============================================================
+    # 3. Validation des déploiements
+    # ============================================================
     - name: Get status of running pods
-      command: "kubectl get pods "
+      command: "kubectl get pods"
       register: pod_status
 
     - name: Display pod status
