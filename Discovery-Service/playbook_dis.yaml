@@ -3,6 +3,10 @@
   hosts: windows_serveur
   gather_facts: no
 
+  vars:
+    app_name: discovery-app
+    manifest_path: "{{ playbook_dir }}/discovery-deploy.yaml"
+
   tasks:
     - name: Deploy Kubernetes manifest on remote cluster
       win_command: "kubectl apply -f {{ manifest_path }}"
