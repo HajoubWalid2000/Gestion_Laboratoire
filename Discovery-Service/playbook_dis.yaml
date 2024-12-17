@@ -5,7 +5,7 @@
 
   vars:
     app_name: discovery-app
-    manifest_path: "{{ playbook_dir }}/discovery-deploy.yaml"
+    manifest_path: "discovery-deploy.yaml"
 
   tasks:
 
