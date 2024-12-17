@@ -1,4 +1,4 @@
-
+---
 - name: Deploy an Application to Kubernetes
   hosts: windows_serveur
   gather_facts: no
@@ -36,7 +36,7 @@
     # 4. Validation des déploiements
     # ============================================================
     - name: Get status of running pods
-      win_command: "kubectl get pods "
+      win_command: "kubectl get pods"
       register: pod_status
 
     - name: Display pod status
