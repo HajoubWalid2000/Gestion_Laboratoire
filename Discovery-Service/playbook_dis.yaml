@@ -1,13 +1,27 @@
-- name: Deploy Kubernetes manifest using kubectl on Windows
+# Playbook Ansible pour déployer une application Kubernetes sur Windows
+- name: Deploy Kubernetes Application
   hosts: windows_serveur
   gather_facts: no
 
+  vars:
+    app_name: discovery-app
+    manifest_path: "{{ playbook_dir }}/discovery-deploy.yaml"
+    remote_manifest_path: "C:\\temp\\discovery-deploy.yaml"
+
   tasks:
-    - name: Ensure kubectl is installed
-      win_command: kubectl version --client
-      register: kubectl_installed
-      ignore_errors: yes
 
-    - name: Deploy Kubernetes manifest
-      win_command: "kubectl apply -f discovery-deploy.yaml"
+    - name: Copy Kubernetes manifest to remote server
+      win_copy:
+        src: "{{ manifest_path }}"
+        dest: "{{ remote_manifest_path }}"
 
+    - name: Deploy Kubernetes manifest on remote cluster
+      win_command: "kubectl apply -f {{ remote_manifest_path }}"
+
+    - name: Check running pods status
+      win_command: "kubectl get pods -l app={{ app_name }}"
+      register: pod_status
+
+    - name: Display pod status
+      debug:
+        msg: "Pods Status: {{ pod_status.stdout }}"
