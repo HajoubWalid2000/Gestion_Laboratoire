@@ -1,27 +1,15 @@
----
-- name: Deploy an Application to Kubernetes
+- name: Deploy Kubernetes Deployment without kubeconfig
   hosts: windows_serveur
   gather_facts: no
 
-  vars:
-    app_name: discovery-app
-    manifest_path: "discovery-deploy.yaml"
-
   tasks:
 
-    # ============================================================
-    # 1. Appliquer directement le manifest Kubernetes
-    # ============================================================
-    - name: Deploy Kubernetes manifest on remote cluster
-      win_command: "kubectl apply -f {{ manifest_path }}"
+    - name: Deploy Kubernetes manifest
+      community.kubernetes.k8s:
+        state: present
+        definition: "discovery-deploy.yaml"
+      register: deployment_result
 
-    # ============================================================
-    # 2. Validation des déploiements
-    # ============================================================
-    - name: Get status of running pods
-      win_command: "kubectl get pods "
-      register: pod_status
-
-    - name: Display pod status
+    - name: Display deployment result
       debug:
-        msg: "Pods Status: {{ pod_status.stdout }}"
+        msg: "Deployment result: {{ deployment_result }}"
