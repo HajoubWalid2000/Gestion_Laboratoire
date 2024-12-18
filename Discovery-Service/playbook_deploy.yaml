@@ -1,0 +1,26 @@
+- name: Deploy microservice dans kubernetes
+  hosts: windows_serveur
+  gather_facts: no
+
+  tasks:
+
+    - name: Créer un répertoire temporaire sur le serveur distant
+      win_file:
+        path: "C:/temp"
+        state: directory
+
+    - name: Copier le fichier discovery-deploy.yaml sur le serveur distant
+      copy:
+        src: "{{ playbook_dir }}/discovery-deploy.yaml"
+        dest: "C:/temp/discovery-deploy.yaml"
+
+    - name: phase de deploiement kubernetes
+      win_command: "kubectl apply -f C:/temp/discovery-deploy.yaml"
+
+    - name: Validation des déploiements
+      win_command: "kubectl get pods"
+      register: pod_status
+
+    - name: Display pod status
+      debug:
+        msg: "Pods Status: {{ pod_status.stdout }}"
